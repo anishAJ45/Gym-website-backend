@@ -1,5 +1,10 @@
 const jwt = require("jsonwebtoken");
 
+const secret = process.env.JWT_SECRET;
+if (!secret) {
+  throw new Error("FATAL: JWT_SECRET is not set in .env file. Server stopped.");
+}
+
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -10,10 +15,7 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || "your_jwt_secret"
-    );
+    const decoded = jwt.verify(token, secret);
     req.user = decoded;
     next();
   } catch (err) {
