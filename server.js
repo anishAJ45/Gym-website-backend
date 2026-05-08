@@ -11,15 +11,11 @@ const contactRoutes = require("./routes/contact");
 const requiredEnvVars = [
   "DATABASE_URL",
   "JWT_SECRET",
-  "SMTP_HOST",
-  "SMTP_PORT",
-  "SMTP_USER",
-  "SMTP_PASS",
-  "EMAIL_FROM",
   "FRONTEND_URL",
 ];
 
 const missingEnvVars = requiredEnvVars.filter(v => !process.env[v]);
+
 if (missingEnvVars.length > 0) {
   console.error(`Missing environment variables: ${missingEnvVars.join(", ")}`);
   process.exit(1);
@@ -27,8 +23,8 @@ if (missingEnvVars.length > 0) {
 
 const app = express();
 
-// Trust proxy for Render deployment - required for express-rate-limit with X-Forwarded-For
-app.set('trust proxy', 1);
+// Trust proxy for Render deployment
+app.set("trust proxy", 1);
 
 // Initialize MongoDB connection
 connectDB();
@@ -61,6 +57,7 @@ process.on("SIGINT", async () => {
 
 // Start Server
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
